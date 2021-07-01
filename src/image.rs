@@ -1,6 +1,7 @@
 pub fn create_test_image(v: &mut Vec<u8>, width: u32, height: u32) {
     let mut index = 0;
     for i in (0..(height)).rev() {
+        // println!("Lines remaining: {}", i + 1); //progress indicator in case of long renders
         for j in 0..width {
             let r = i as f32 / (width - 1) as f32;
             let g = j as f32 / (height - 1) as f32;
