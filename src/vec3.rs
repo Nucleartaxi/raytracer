@@ -67,7 +67,15 @@ impl Vec3 {
     pub fn length(&self) -> f64 {
         self.length_squared().sqrt()
     }
-    //immutable methods
+    pub fn unit_vector(&self) -> Vec3 {
+        self.divide_by(self.length())
+    }
+    pub fn dot(&self, other: &Vec3) -> f64 {
+        self.x * other.x + self.y * other.y + self.z * other.z
+    }
+    pub fn cross(&self, other: &Vec3) -> Vec3 {
+        Vec3::new(self.y * other.z - self.z * other.y, self.z * other.x - self.x * other.z, self.x * other.y - self.y * other.x)
+    }
 }
 
 #[cfg(test)]
@@ -168,5 +176,24 @@ mod test {
         let v1 = Vec3::new(2.0, 4.0, 6.0);
         let answer = Vec3::new(1.0, 2.0, 3.0);
         assert_eq!(v1.divide_by(2.0), answer);
+    }
+    #[test]
+    fn test_unit_vector() {
+        let v1 = Vec3::new(1.0, 2.0, 3.0);
+        let answer = Vec3::new(1.0 / (14.0_f64).sqrt(), (2.0 / 7.0_f64).sqrt(), 3.0 / (14.0_f64).sqrt());
+        assert_eq!(v1.unit_vector(), answer);
+    }
+    #[test]
+    fn test_dot() {
+        let v1 = Vec3::new(1.0, 2.0, 3.0);
+        let v2 = Vec3::new(4.0, 5.0, 6.0);
+        assert_eq!(v1.dot(&v2), 32.0);
+    }
+    #[test]
+    fn test_cross() {
+        let v1 = Vec3::new(1.0, 2.0, 4.0);
+        let v2 = Vec3::new(5.0, 6.0, 7.0);
+        let answer = Vec3::new(-10.0, 13.0, -4.0);
+        assert_eq!(v1.cross(&v2), answer);
     }
 }
