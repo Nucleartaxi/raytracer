@@ -1,9 +1,9 @@
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub struct Vec3 {
-    x: f32,
-    y: f32,
-    z: f32,
+    x: f64,
+    y: f64,
+    z: f64,
 }
 
 impl Vec3 {
@@ -15,7 +15,7 @@ impl Vec3 {
             z: 0.0,
         }
     }
-    pub fn new(x: f32, y: f32, z:f32) -> Vec3 {
+    pub fn new(x: f64, y: f64, z:f64) -> Vec3 {
         Vec3 {
             x,
             y,
@@ -23,23 +23,23 @@ impl Vec3 {
         }
     }
     //getters
-    pub fn x(&self) -> f32 {
+    pub fn x(&self) -> f64 {
         self.x
     }
-    pub fn y(&self) -> f32 {
+    pub fn y(&self) -> f64 {
         self.y
     }
-    pub fn z(&self) -> f32 {
+    pub fn z(&self) -> f64 {
         self.z
     }
     //setters
-    pub fn set_x(&mut self, x: f32) {
+    pub fn set_x(&mut self, x: f64) {
         self.x = x;
     }
-    pub fn set_y(&mut self, y: f32) {
+    pub fn set_y(&mut self, y: f64) {
         self.y = y;
     }
-    pub fn set_z(&mut self, z: f32) {
+    pub fn set_z(&mut self, z: f64) {
         self.z = z;
     }
     //operations
@@ -55,10 +55,16 @@ impl Vec3 {
     pub fn divide(&self, other: &Vec3) -> Vec3 {
         Vec3::new(self.x / other.x, self.y / other.y, self.z / other.z)
     }
-    pub fn length_squared(&self) -> f32 {
+    pub fn multiply_by(&self, f: f64) -> Vec3 {
+        Vec3::new(self.x * f, self.y * f, self.z * f)
+    }
+    pub fn divide_by(&self, d: f64) -> Vec3 {
+        Vec3::new(self.x / d, self.y / d, self.z / d)
+    }
+    pub fn length_squared(&self) -> f64 {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
-    pub fn length(&self) -> f32 {
+    pub fn length(&self) -> f64 {
         self.length_squared().sqrt()
     }
     //immutable methods
@@ -147,8 +153,20 @@ mod test {
     #[test]
     fn test_length() {
         let v1 = Vec3::new(1.0, 2.0, 3.0);
-        assert_eq!(v1.length(), 3.7416575);
+        assert_eq!(v1.length(), 3.7416573867739413);
         let v2 = Vec3::new_empty();
         assert_eq!(v2.length(), 0.0);
+    }
+    #[test]
+    fn test_multiply_by() {
+        let v1 = Vec3::new(1.0, 2.0, 3.0);
+        let answer = Vec3::new(3.0, 6.0, 9.0);
+        assert_eq!(v1.multiply_by(3.0), answer);
+    }
+    #[test]
+    fn test_divide_by() {
+        let v1 = Vec3::new(2.0, 4.0, 6.0);
+        let answer = Vec3::new(1.0, 2.0, 3.0);
+        assert_eq!(v1.divide_by(2.0), answer);
     }
 }
