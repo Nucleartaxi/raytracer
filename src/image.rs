@@ -1,19 +1,11 @@
+use super::color;
+
 pub fn create_test_image(v: &mut Vec<u8>, width: u32, height: u32) {
-    let mut index = 0;
     for i in (0..(height)).rev() {
         // println!("Lines remaining: {}", i + 1); //progress indicator in case of long renders
         for j in 0..width {
-            let r = i as f64 / (width - 1) as f64;
-            let g = j as f64 / (height - 1) as f64;
-            let b = 0.25;
-            // println!("{} {} {}", r, g, b);
-            
-            v[index] = (r * 255.999) as u8;
-            index = index + 1;
-            v[index] = (g * 255.999) as u8;
-            index = index + 1;
-            v[index] = (b * 255.999) as u8;
-            index = index + 1;
+            let c = color::Color::new(i as f64 / (width - 1) as f64, j as f64 / (height - 1) as f64, 0.25);
+            c.write_color(v);
         }
     }
 }
