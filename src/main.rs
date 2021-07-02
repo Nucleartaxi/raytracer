@@ -1,8 +1,7 @@
 // mod foo;
 mod image;
-
-
-
+mod vec3;
+mod color;
 
 fn main() {
     println!("Hello, world!");
@@ -16,5 +15,8 @@ fn main() {
     // for i in &v {
     //     println!("{}", i);
     // }
-    image::output_image(&v, WIDTH, HEIGHT)
+    image::output_image(&v, WIDTH, HEIGHT);
+    let test_vec3 = vec3::Vec3::new(0.0, 0.0, 0.0);
+    println!("{:?}", test_vec3);
+    
 }
