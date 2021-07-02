@@ -26,6 +26,11 @@ impl Color {
     pub fn b(&self) -> f64 {
         self.b
     }
+    pub fn write_color(&self, v: &mut Vec<u8>) {
+        v.push((255.999 * self.r) as u8); 
+        v.push((255.999 * self.g) as u8); 
+        v.push((255.999 * self.b) as u8); 
+    }
 }
 
 
@@ -44,5 +49,13 @@ mod test {
         let c1 = Color::new_empty();
         let c2 = Color {r: 0.0, g: 0.0, b: 0.0};
         assert_eq!(c1, c2);
+    }
+    #[test]
+    fn test_write_color() {
+        let c1 = Color::new(1.0, 0.5, 0.25);
+        let mut v1: Vec<u8> = Vec::new();
+        c1.write_color(&mut v1);
+        let v2: Vec<u8> = vec![255, 127, 63];
+        assert_eq!(v1, v2);
     }
 }
