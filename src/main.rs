@@ -4,17 +4,14 @@ mod vec3;
 mod color;
 
 fn main() {
-    println!("Hello, world!");
+    //image
     const WIDTH: u32 = 256;
     const HEIGHT: u32 = 256;
-    let mut v: Vec<u8> = Vec::new();
 
+    //render
+    let mut v: Vec<u8> = Vec::new();
     image::create_test_image(&mut v, WIDTH, HEIGHT);
-    // for i in &v {
-    //     println!("{}", i);
-    // }
+
+    //output
     image::output_image(&v, WIDTH, HEIGHT);
-    let test_vec3 = vec3::Vec3::new(0.0, 0.0, 0.0);
-    println!("{:?}", test_vec3);
-    
 }
