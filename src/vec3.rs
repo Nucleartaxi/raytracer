@@ -9,11 +9,7 @@ pub struct Vec3 {
 impl Vec3 {
     //constructors
     pub fn new_empty() -> Vec3 {
-        Vec3 {
-            x: 0.0,
-            y: 0.0,
-            z: 0.0,
-        }
+        Vec3::new(0.0, 0.0, 0.0)
     }
     pub fn new(x: f64, y: f64, z:f64) -> Vec3 {
         Vec3 {
