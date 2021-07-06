@@ -1,4 +1,5 @@
 use super::vec3;
+use super::color;
 
 #[derive(Debug)]
 #[derive(PartialEq)]
@@ -22,6 +23,14 @@ impl ray {
     pub fn at(&self, t: f64) -> vec3::Vec3 {
         let dir = self.direction.multiply_by(t);
         self.origin.add(&dir)
+    }
+    pub fn ray_color(&self) -> color::Color { //does math with vectors, then returns a color
+        let unit_direction = self.direction.unit_vector();
+        let t = 0.5 * (unit_direction.y() + 1.0);
+        let mut temp = vec3::Vec3::new(1.0, 1.0, 1.0).multiply_by(1.0 - t);
+        let temp2 = vec3::Vec3::new(0.5, 0.7, 1.0).multiply_by(t);
+        temp = temp.multiply(&temp2);
+        color::Color::new(temp.x(), temp.y(), temp.z())
     }
 }
 

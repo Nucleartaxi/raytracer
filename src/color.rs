@@ -1,9 +1,9 @@
+use super::vec3;
+
 #[derive(Debug)]
 #[derive(PartialEq)]
-pub struct Color {
-    r: f64,
-    g: f64,
-    b: f64,
+pub struct Color { //internally stores colors as values between 0.0 and 1.0. Writes colors as u8 values from 0 to 255
+    v: vec3::Vec3,
 }
 
 impl Color {
@@ -12,24 +12,22 @@ impl Color {
     }
     pub fn new(r: f64, g: f64, b: f64) -> Color {
         Color {
-            r,
-            g,
-            b,
+            v: vec3::Vec3::new(r, g, b)
         }
     }
     pub fn r(&self) -> f64 {
-        self.r
+        self.v.x()
     }
     pub fn g(&self) -> f64 {
-        self.g
+        self.v.y()
     }
     pub fn b(&self) -> f64 {
-        self.b
+        self.v.z()
     }
     pub fn write_color(&self, v: &mut Vec<u8>) {
-        v.push((255.999 * self.r) as u8); 
-        v.push((255.999 * self.g) as u8); 
-        v.push((255.999 * self.b) as u8); 
+        v.push((255.999 * self.r()) as u8); 
+        v.push((255.999 * self.g()) as u8); 
+        v.push((255.999 * self.b()) as u8); 
     }
 }
 
@@ -47,7 +45,7 @@ mod test {
     #[test]
     fn test_new_empty() {
         let c1 = Color::new_empty();
-        let c2 = Color {r: 0.0, g: 0.0, b: 0.0};
+        let c2 = Color {v: vec3::Vec3::new_empty()};
         assert_eq!(c1, c2);
     }
     #[test]
