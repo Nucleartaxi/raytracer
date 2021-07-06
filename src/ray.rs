@@ -3,19 +3,19 @@ use super::color;
 
 #[derive(Debug)]
 #[derive(PartialEq)]
-pub struct ray {
+pub struct Ray {
     origin: vec3::Vec3, //origin point is a vec3 to simplify mathematical operations with other vectors
     direction: vec3::Vec3,
 }
-impl ray {
-    pub fn new_empty() -> ray {
-        ray {
+impl Ray {
+    pub fn new_empty() -> Ray {
+        Ray {
             origin: vec3::Vec3::new_empty(),
             direction: vec3::Vec3::new_empty(),
         }
     }
-    pub fn new(origin: vec3::Vec3, direction: vec3::Vec3) -> ray {
-        ray {
+    pub fn new(origin: vec3::Vec3, direction: vec3::Vec3) -> Ray {
+        Ray {
             origin,
             direction,
         }
@@ -27,9 +27,7 @@ impl ray {
     pub fn ray_color(&self) -> color::Color { //does math with vectors, then returns a color
         let unit_direction = self.direction.unit_vector();
         let t = 0.5 * (unit_direction.y() + 1.0);
-        let mut temp = vec3::Vec3::new(1.0, 1.0, 1.0).multiply_by(1.0 - t);
-        let temp2 = vec3::Vec3::new(0.5, 0.7, 1.0).multiply_by(t);
-        temp = temp.multiply(&temp2);
+        let temp = vec3::Vec3::new(1.0, 1.0, 1.0).multiply_by(1.0 - t).add(&vec3::Vec3::new(0.5, 0.7, 1.0).multiply_by(t));
         color::Color::new(temp.x(), temp.y(), temp.z())
     }
 }
@@ -39,7 +37,7 @@ mod test {
     use super::*;
     #[test]
     fn test_at() {
-        let r = ray::new(vec3::Vec3::new(1.0, 2.0, 3.0), vec3::Vec3::new(1.0, 1.0, 1.0));
+        let r = Ray::new(vec3::Vec3::new(1.0, 2.0, 3.0), vec3::Vec3::new(1.0, 1.0, 1.0));
         let p1 = r.at(1.0);
         assert_eq!(p1, vec3::Vec3::new(2.0, 3.0, 4.0));
         let p2 = r.at(10.0);
