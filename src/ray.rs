@@ -20,13 +20,21 @@ impl Ray {
             direction,
         }
     }
+    pub fn origin(&self) -> vec3::Vec3 {
+        self.origin
+    }
+    pub fn direction(&self) -> vec3::Vec3 {
+        self.direction
+    }
     pub fn at(&self, t: f64) -> vec3::Vec3 {
         let dir = self.direction.multiply_by(t);
         self.origin.add(&dir)
     }
     pub fn ray_color(&self) -> color::Color { //does math with vectors, then returns a color
+        if self.hit_sphere(vec3::Vec3::new(0.0, 0.0, -1.0), 0.5) {
+            return color::Color::new(1.0, 0.0, 0.0)
+        }
         let unit_direction = self.direction.unit_vector();
-        // println!("{:?}", unit_direction);
         let t = 0.5 * (unit_direction.y() + 1.0);
         let start_value = vec3::Vec3::new(1.0, 1.0, 1.0);
         let end_value = vec3::Vec3::new(0.5, 0.7, 1.0);
@@ -34,6 +42,14 @@ impl Ray {
         // let temp = vec3::Vec3::new(unit_direction.x(), unit_direction.y(), 1.0);
         let temp = start_value.multiply_by(1.0 - t).add(&end_value.multiply_by(t));
         color::Color::new(temp.x(), temp.y(), temp.z())
+    }
+    pub fn hit_sphere(&self, center: vec3::Vec3, radius: f64) -> bool {
+        let oc = self.origin().subtract(&center);
+        let a = self.direction().dot(&self.direction());
+        let b = 2.0 * self.direction().dot(&oc);
+        let c = oc.dot(&oc) - radius * radius;
+        let discriminant = b * b - (4 as f64) * a * c;
+        discriminant > 0.0
     }
 }
 
