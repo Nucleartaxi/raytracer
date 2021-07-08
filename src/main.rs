@@ -7,7 +7,7 @@ mod ray;
 fn main() {
     //image
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const WIDTH: u32 = 400;
+    const WIDTH: u32 = 1920;
     const HEIGHT: u32 = (WIDTH as f64 / ASPECT_RATIO) as u32;
 
     //camera
@@ -21,9 +21,24 @@ fn main() {
     let lower_left_corner = origin.subtract(&horizontal.divide_by(2.0)).subtract(&vertical.divide_by(2.0)).subtract(&vec3::Vec3::new(0.0, 0.0, focal_length));
 
     //render
-    let mut v: Vec<u8> = Vec::new();
-    image::create_test_image(&mut v, WIDTH, HEIGHT);
+    let mut image_data: Vec<u8> = Vec::new();
+    // image::create_test_image(&mut image_data, WIDTH, HEIGHT);
+    for i in (0..(HEIGHT)).rev() {
+        println!("Lines remaining: {}", i + 1); //progress indicator in case of long renders
+        for j in 0..WIDTH {
+            let u = (j as f64) / ((WIDTH - 1) as f64);
+            let v = (i as f64) / ((HEIGHT - 1) as f64);
+            // println!("u: {} v: {} i: {} j: {}", u, v, i, j);
+            let r = ray::Ray::new(origin, lower_left_corner.add(&horizontal.multiply_by(u)).add(&vertical.multiply_by(v)).subtract(&origin));
+            // println!("{:?}", r);
+            let pixel_color = r.ray_color();
+            // println!("{:?}", pixel_color);
+            pixel_color.write_color(&mut image_data);
+        }
+        // println!("---------------------------------------");
+    }
 
     //output
-    image::output_image(&v, WIDTH, HEIGHT);
+    // println!("{:?}", image_data);
+    image::output_image(&image_data, WIDTH, HEIGHT);
 }
