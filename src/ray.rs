@@ -1,5 +1,6 @@
 use super::vec3;
 use super::color;
+use super::hittable;
 
 #[derive(Debug)]
 #[derive(PartialEq)]
@@ -32,17 +33,18 @@ impl Ray {
     }
     pub fn hit_sphere(&self, center: vec3::Vec3, radius: f64) -> f64 {
         let oc = self.origin().subtract(&center);
-        let a = self.direction().dot(&self.direction());
-        let b = 2.0 * oc.dot(&self.direction());
-        let c = oc.dot(&oc) - (radius * radius);
-        let discriminant = (b * b) - (4.0 * a * c);
+        let a = self.direction().length_squared();
+        let half_b = oc.dot(&self.direction());
+        let c = oc.length_squared() - (radius * radius);
+        let discriminant = (half_b * half_b) - (a * c);
+        
         if discriminant < 0.0 {
             return -1.0
         } else {
-            return (-b - discriminant.sqrt()) / (2.0 * a)
+            return (-half_b - discriminant.sqrt()) / a
         }
     }
-    pub fn ray_color(&self) -> color::Color { //does math with vectors, then returns a color
+    pub fn ray_color(&self, world: & dyn hittable::Hittable) -> color::Color { //does math with vectors, then returns a color
         let t = self.hit_sphere(vec3::Vec3::new(0.0, 0.0, -1.0), 0.5);
         if t > 0.0 {
             let temp = self.at(t).subtract(&vec3::Vec3::new(0.0, 0.0, -1.0));
