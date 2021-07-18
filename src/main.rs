@@ -3,6 +3,7 @@ mod image;
 mod vec3;
 mod color;
 mod ray;
+mod hittable;
 
 fn main() {
     //image
@@ -28,17 +29,12 @@ fn main() {
         for j in 0..WIDTH {
             let u = (j as f64) / ((WIDTH - 1) as f64);
             let v = (i as f64) / ((HEIGHT - 1) as f64);
-            // println!("u: {} v: {} i: {} j: {}", u, v, i, j);
             let r = ray::Ray::new(origin, lower_left_corner.add(&horizontal.multiply_by(u)).add(&vertical.multiply_by(v)).subtract(&origin));
-            // println!("{:?}", r);
             let pixel_color = r.ray_color();
-            // println!("{:?}", pixel_color);
             pixel_color.write_color(&mut image_data);
         }
-        // println!("---------------------------------------");
     }
 
     //output
-    // println!("{:?}", image_data);
     image::output_image(&image_data, WIDTH, HEIGHT);
 }
