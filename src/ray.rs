@@ -56,21 +56,17 @@ impl Ray {
 
         let (was_hit, temp_rec) = world.hit(&self, 0.001, f64::INFINITY, &hittable::HitRecord::new_empty());
         if was_hit {
-            println!("COLOR temp_rec {:?}", temp_rec);
             let v = vec3::Vec3::new(1.0, 1.0, 1.0).add(&temp_rec.normal).multiply_by(0.5);
-            // return color::Color::new(temp_rec.normal.x(), temp_rec.normal.y(), temp_rec.normal.z());
             // return color::Color::new(1.0, 0.0, 0.0); //show red where the rays hit the sphere
             return color::Color::new(v.x(), v.y(), v.z())
         }
 
         // sky/background
-        // println!("Not Hit: {} {} {}", temp_rec.normal.x(), temp_rec.normal.y(), temp_rec.normal.z());
         let unit_direction = self.direction.unit_vector();
         let t = 0.5 * (unit_direction.y() + 1.0);
 
         let start_value = vec3::Vec3::new(1.0, 1.0, 1.0);
         let end_value = vec3::Vec3::new(0.5, 0.7, 1.0);
-        // let temp = vec3::Vec3::new(unit_direction.x(), unit_direction.y(), 1.0);
         let temp = start_value.multiply_by(1.0 - t).add(&end_value.multiply_by(t));
         color::Color::new(temp.x(), temp.y(), temp.z())
     }

@@ -56,35 +56,24 @@ impl Hittable for Sphere {
             return (false, HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face})
         }
         let sqrtd = discriminant.sqrt();
-        //
+
         //find the nearest root that lies in the acceptable range
         let mut root = (-half_b - sqrtd) / a;
-        println!("root {} t_min {} t_max {}", root, t_min, t_max); 
         if root < t_min || t_max < root {
             root = (-half_b + sqrtd) / a;
-            println!("if2");
             if root < t_min || t_max < root {
-                println!("if3");
                 return (false, HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face})
             }
         }
-        println!("root {}", root); 
-        println!("modifying temp_rec");
         
-        // let mut temp_rec = HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face};
         let mut temp_rec = HitRecord {
             p: r.at(root),
             normal: rec.normal,
             t: root,
             front_face: rec.front_face,
         };
-        println!("temp_rec {:?}", temp_rec);
-        // temp_rec.t = root;
-        // temp_rec.p = r.at(rec.t);
         let outward_normal = (temp_rec.p.subtract(&self.center)).divide_by(self.radius);
-        temp_rec.set_face_normal(r, outward_normal); //sets front_face to true or false
-        println!("ray {:?}", r);
-        println!("temp_rec {:?}", temp_rec);
+        temp_rec.set_face_normal(r, outward_normal); //sets front_face to true or false and sets the normal
         (true, temp_rec)
     }
 }
