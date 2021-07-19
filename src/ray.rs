@@ -59,6 +59,7 @@ impl Ray {
             println!("COLOR temp_rec {:?}", temp_rec);
             let v = vec3::Vec3::new(1.0, 1.0, 1.0).add(&temp_rec.normal).multiply_by(0.5);
             // return color::Color::new(temp_rec.normal.x(), temp_rec.normal.y(), temp_rec.normal.z());
+            // return color::Color::new(1.0, 0.0, 0.0); //show red where the rays hit the sphere
             return color::Color::new(v.x(), v.y(), v.z())
         }
 

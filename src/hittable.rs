@@ -71,11 +71,17 @@ impl Hittable for Sphere {
         println!("root {}", root); 
         println!("modifying temp_rec");
         
-        let mut temp_rec = HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face};
+        // let mut temp_rec = HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face};
+        let mut temp_rec = HitRecord {
+            p: r.at(root),
+            normal: rec.normal,
+            t: root,
+            front_face: rec.front_face,
+        };
         println!("temp_rec {:?}", temp_rec);
-        temp_rec.t = root;
-        temp_rec.p = r.at(rec.t);
-        let outward_normal = (rec.p.subtract(&self.center)).divide_by(self.radius);
+        // temp_rec.t = root;
+        // temp_rec.p = r.at(rec.t);
+        let outward_normal = (temp_rec.p.subtract(&self.center)).divide_by(self.radius);
         temp_rec.set_face_normal(r, outward_normal); //sets front_face to true or false
         println!("ray {:?}", r);
         println!("temp_rec {:?}", temp_rec);
