@@ -56,7 +56,7 @@ impl Hittable for Sphere {
             return (false, HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face})
         }
         let sqrtd = discriminant.sqrt();
-
+        //
         //find the nearest root that lies in the acceptable range
         let mut root = (-half_b - sqrtd) / a;
         println!("root {} t_min {} t_max {}", root, t_min, t_max); 
