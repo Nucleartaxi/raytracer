@@ -4,12 +4,18 @@ mod vec3;
 mod color;
 mod ray;
 mod hittable;
+mod utils;
 
 fn main() {
     //image
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const WIDTH: u32 = 1920;
+    const WIDTH: u32 = 31;
     const HEIGHT: u32 = (WIDTH as f64 / ASPECT_RATIO) as u32;
+
+    //world
+    let mut world = hittable::HittableList::new();
+    world.add(hittable::Sphere::new(vec3::Vec3::new(0.0, 0.0, -1.0), 0.5));
+    // world.add(hittable::Sphere::new(vec3::Vec3::new(0.0, -100.5, -1.0), 100.0));
 
     //camera
     let viewport_height = 2.0;
@@ -30,7 +36,7 @@ fn main() {
             let u = (j as f64) / ((WIDTH - 1) as f64);
             let v = (i as f64) / ((HEIGHT - 1) as f64);
             let r = ray::Ray::new(origin, lower_left_corner.add(&horizontal.multiply_by(u)).add(&vertical.multiply_by(v)).subtract(&origin));
-            let pixel_color = r.ray_color();
+            let pixel_color = r.ray_color(&world);
             pixel_color.write_color(&mut image_data);
         }
     }
