@@ -11,11 +11,9 @@ pub struct HitRecord {
 }
 impl HitRecord {
     pub fn set_face_normal(&mut self, r: &ray::Ray, outward_normal: vec3::Vec3) {
-        self.front_face = outward_normal.dot(&r.direction()) < 0.0;
-        if self.front_face {
-            println!("self.normal {:?}", self.normal);
+        let front_face = vec3::Vec3::dot(&r.direction(), &outward_normal) < 0.0;
+        if front_face {
             self.normal = outward_normal;
-            println!("self.normal {:?}", self.normal);
         } else {
             self.normal = outward_normal.multiply_by(-1.0);
         }
@@ -77,8 +75,10 @@ impl Hittable for Sphere {
         println!("temp_rec {:?}", temp_rec);
         temp_rec.t = root;
         temp_rec.p = r.at(rec.t);
-        let outward_normal = temp_rec.p.subtract(&self.center).divide_by(self.radius);
+        let outward_normal = (rec.p.subtract(&self.center)).divide_by(self.radius);
         temp_rec.set_face_normal(r, outward_normal); //sets front_face to true or false
+        println!("ray {:?}", r);
+        println!("temp_rec {:?}", temp_rec);
         (true, temp_rec)
     }
 }
@@ -103,14 +103,14 @@ impl Hittable for HittableList {
     fn hit(&self, r: &ray::Ray, t_min: f64, t_max: f64, rec: &HitRecord) -> (bool, HitRecord) {
         let mut hit_anything = false;
         let mut closest_so_far = t_max;
-        let return_rec = HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face};
+        let mut return_rec = HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face};
         
         for s in &self.vec {
-            let (was_hit, return_rec) = s.hit(r, t_min, closest_so_far, &rec);
+            let (was_hit, temp_rec) = s.hit(r, t_min, closest_so_far, &rec);
             if was_hit {
                 hit_anything = true;
-                closest_so_far = return_rec.t;
-                // return_rec = HitRecord {p: temp_rec_2.p, normal: temp_rec_2.normal, t: temp_rec_2.t, front_face: temp_rec_2.front_face};
+                closest_so_far = temp_rec.t;
+                return_rec = temp_rec;
             }
         }
         (hit_anything, return_rec)

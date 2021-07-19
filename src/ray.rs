@@ -54,9 +54,10 @@ impl Ray {
         //     return color::Color::new(color_temp.x(), color_temp.y(), color_temp.z())
         // }
 
-        let (was_hit, temp_rec) = world.hit(&self, 0.0, f64::INFINITY, &hittable::HitRecord::new_empty());
+        let (was_hit, temp_rec) = world.hit(&self, 0.001, f64::INFINITY, &hittable::HitRecord::new_empty());
         if was_hit {
-            let v = vec3::Vec3::new(1.0, 1.0, 1.0).multiply(&temp_rec.normal).multiply_by(0.5);
+            println!("COLOR temp_rec {:?}", temp_rec);
+            let v = vec3::Vec3::new(1.0, 1.0, 1.0).add(&temp_rec.normal).multiply_by(0.5);
             // return color::Color::new(temp_rec.normal.x(), temp_rec.normal.y(), temp_rec.normal.z());
             return color::Color::new(v.x(), v.y(), v.z())
         }
