@@ -5,7 +5,7 @@ pub fn create_test_image(v: &mut Vec<u8>, width: u32, height: u32) {
         // println!("Lines remaining: {}", i + 1); //progress indicator in case of long renders
         for j in 0..width {
             let c = color::Color::new(i as f64 / (width - 1) as f64, j as f64 / (height - 1) as f64, 0.25);
-            c.write_color(v);
+            c.write_color(v, 1);
         }
     }
 }

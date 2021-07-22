@@ -25,6 +25,11 @@ impl Color {
     pub fn b(&self) -> f64 {
         self.v.z()
     }
+    pub fn add(&self, c: Color) -> Color {
+        Color {
+            v: vec3::Vec3::new(self.r() + c.r(), self.g() + c.g(), self.b() + c.b()),
+        }
+    }
     pub fn write_color(&self, v: &mut Vec<u8>, samlpes_per_pixel: u32) {
         let mut r = self.r();
         let mut g = self.g();
@@ -35,7 +40,7 @@ impl Color {
         r = r * scale;
         g = g * scale;
         b = b * scale;
-        
+
         //write the translated [0, 255] value of each color component
         v.push((256.0 * utils::clamp(r, 0.0, 0.999)) as u8); 
         v.push((256.0 * utils::clamp(g, 0.0, 0.999)) as u8); 
