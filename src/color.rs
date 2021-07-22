@@ -1,4 +1,5 @@
 use super::vec3;
+use super::utils;
 
 #[derive(Debug)]
 #[derive(PartialEq)]
@@ -24,10 +25,21 @@ impl Color {
     pub fn b(&self) -> f64 {
         self.v.z()
     }
-    pub fn write_color(&self, v: &mut Vec<u8>) {
-        v.push((255.999 * self.r()) as u8); 
-        v.push((255.999 * self.g()) as u8); 
-        v.push((255.999 * self.b()) as u8); 
+    pub fn write_color(&self, v: &mut Vec<u8>, samlpes_per_pixel: u32) {
+        let mut r = self.r();
+        let mut g = self.g();
+        let mut b = self.b();
+
+        //divide the color by the number of samples
+        let scale = 1.0 / samlpes_per_pixel as f64;
+        r = r * scale;
+        g = g * scale;
+        b = b * scale;
+        
+        //write the translated [0, 255] value of each color component
+        v.push((256.0 * utils::clamp(r, 0.0, 0.999)) as u8); 
+        v.push((256.0 * utils::clamp(g, 0.0, 0.999)) as u8); 
+        v.push((256.0 * utils::clamp(b, 0.0, 0.999)) as u8); 
     }
 }
 
@@ -52,7 +64,7 @@ mod test {
     fn test_write_color() {
         let c1 = Color::new(1.0, 0.5, 0.25);
         let mut v1: Vec<u8> = Vec::new();
-        c1.write_color(&mut v1);
+        c1.write_color(&mut v1, 1);
         let v2: Vec<u8> = vec![255, 127, 63];
         assert_eq!(v1, v2);
     }
