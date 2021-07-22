@@ -1,3 +1,5 @@
+use rand::*;
+
 #[derive(Debug)]
 #[derive(PartialEq)]
 #[derive(Copy, Clone)]
@@ -72,6 +74,14 @@ impl Vec3 {
     }
     pub fn cross(&self, other: &Vec3) -> Vec3 {
         Vec3::new(self.y * other.z - self.z * other.y, self.z * other.x - self.x * other.z, self.x * other.y - self.y * other.x)
+    }
+    pub fn new_random() -> Vec3 {
+        let mut rng = rand::thread_rng();
+        Vec3::new(rng.gen(), rng.gen(), rng.gen())
+    }
+    pub fn new_random_range(min: f64, max: f64) -> Vec3 {
+        let mut rng = rand::thread_rng();
+        Vec3::new(rng.gen_range(min..max), rng.gen_range(min..max), rng.gen_range(min..max))
     }
 }
 
