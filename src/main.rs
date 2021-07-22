@@ -5,17 +5,18 @@ mod color;
 mod ray;
 mod hittable;
 mod utils;
+mod camera;
 
 fn main() {
     //image
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const WIDTH: u32 = 31;
+    const WIDTH: u32 = 192;
     const HEIGHT: u32 = (WIDTH as f64 / ASPECT_RATIO) as u32;
 
     //world
     let mut world = hittable::HittableList::new();
     world.add(hittable::Sphere::new(vec3::Vec3::new(0.0, 0.0, -1.0), 0.5));
-    // world.add(hittable::Sphere::new(vec3::Vec3::new(0.0, -100.5, -1.0), 100.0));
+    world.add(hittable::Sphere::new(vec3::Vec3::new(0.0, -100.5, -1.0), 100.0));
 
     //camera
     let viewport_height = 2.0;
