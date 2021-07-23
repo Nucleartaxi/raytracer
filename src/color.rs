@@ -30,6 +30,11 @@ impl Color {
             v: vec3::Vec3::new(self.r() + c.r(), self.g() + c.g(), self.b() + c.b()),
         }
     }
+    pub fn multiply_by(&self, x: f64) -> Color {
+        Color {
+            v: self.v.multiply_by(x),
+        }
+    }
     pub fn write_color(&self, v: &mut Vec<u8>, samlpes_per_pixel: u32) {
         let mut r = self.r();
         let mut g = self.g();
@@ -37,9 +42,9 @@ impl Color {
 
         //divide the color by the number of samples
         let scale = 1.0 / samlpes_per_pixel as f64;
-        r = r * scale;
-        g = g * scale;
-        b = b * scale;
+        r = (r * scale).sqrt();
+        g = (g * scale).sqrt();
+        b = (b * scale).sqrt();
 
         //write the translated [0, 255] value of each color component
         v.push((256.0 * utils::clamp(r, 0.0, 0.999)) as u8); 

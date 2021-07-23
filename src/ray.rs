@@ -44,7 +44,7 @@ impl Ray {
             return (-half_b - discriminant.sqrt()) / a
         }
     }
-    pub fn ray_color(&self, world: & dyn hittable::Hittable) -> color::Color { //does math with vectors, then returns a color
+    pub fn ray_color(&self, world: & dyn hittable::Hittable, depth: u32) -> color::Color { //does math with vectors, then returns a color
         // let t = self.hit_sphere(vec3::Vec3::new(0.0, 0.0, -1.0), 0.5);
         // if t > 0.0 {
         //     let temp = self.at(t).subtract(&vec3::Vec3::new(0.0, 0.0, -1.0));
@@ -53,12 +53,18 @@ impl Ray {
         //     let color_temp = color_temp.multiply_by(0.5);
         //     return color::Color::new(color_temp.x(), color_temp.y(), color_temp.z())
         // }
+        // if we've exceeded the ray bounce limit, no more light is gathered
+        if depth <= 0 {
+            return color::Color::new_empty();
+        }
 
         let (was_hit, temp_rec) = world.hit(&self, 0.001, f64::INFINITY, &hittable::HitRecord::new_empty());
         if was_hit {
-            let v = vec3::Vec3::new(1.0, 1.0, 1.0).add(&temp_rec.normal).multiply_by(0.5);
             // return color::Color::new(1.0, 0.0, 0.0); //show red where the rays hit the sphere
-            return color::Color::new(v.x(), v.y(), v.z())
+            let target = temp_rec.p.add(&temp_rec.normal).add(&vec3::Vec3::random_unit_vector());
+            return Ray::new(temp_rec.p, target.subtract(&temp_rec.p)).ray_color(world, depth - 1).multiply_by(0.5);
+            // let v = vec3::Vec3::new(1.0, 1.0, 1.0).add(&temp_rec.normal).multiply_by(0.5);
+            // return color::Color::new(v.x(), v.y(), v.z())
         }
 
         // sky/background

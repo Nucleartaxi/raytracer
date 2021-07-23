@@ -14,6 +14,7 @@ fn main() {
     const WIDTH: u32 = 192;
     const HEIGHT: u32 = (WIDTH as f64 / ASPECT_RATIO) as u32;
     const SAMPLES_PER_PIXEL: u32 = 100;
+    const MAX_DEPTH: u32 = 50;
 
     //world
     let mut world = hittable::HittableList::new();
@@ -35,7 +36,7 @@ fn main() {
                 let u = (j as f64 + rng.gen::<f64>()) / ((WIDTH - 1) as f64);
                 let v = (i as f64 + rng.gen::<f64>()) / ((HEIGHT - 1) as f64);
                 let r = cam.get_ray(u, v);
-                pixel_color = pixel_color.add(r.ray_color(&world));
+                pixel_color = pixel_color.add(r.ray_color(&world, MAX_DEPTH));
             }
             pixel_color.write_color(&mut image_data, SAMPLES_PER_PIXEL);
         }
