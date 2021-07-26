@@ -95,6 +95,13 @@ impl Vec3 {
     pub fn random_unit_vector() -> Vec3 {
         Vec3::random_in_unit_sphere().unit_vector()
     }
+    pub fn near_zero(&self) -> bool {
+        const S: f64 = 0.00000001;
+        self.x() < S && self.y() < S && self.z() < S
+    }
+    pub fn reflect(v: &Vec3, n: &Vec3) -> Vec3 {
+        v.subtract(&n.multiply_by(v.dot(&n)).multiply_by(2.0))
+    }
 }
 
 #[cfg(test)]

@@ -3,6 +3,8 @@ use super::utils;
 
 #[derive(Debug)]
 #[derive(PartialEq)]
+#[derive(Copy)]
+#[derive(Clone)]
 pub struct Color { //internally stores colors as values between 0.0 and 1.0. Writes colors as u8 values from 0 to 255
     v: vec3::Vec3,
 }
@@ -30,18 +32,23 @@ impl Color {
             v: vec3::Vec3::new(self.r() + c.r(), self.g() + c.g(), self.b() + c.b()),
         }
     }
+    pub fn multiply(&self, c: Color) -> Color {
+        Color {
+            v: self.v.multiply(&c.v),
+        }
+    }
     pub fn multiply_by(&self, x: f64) -> Color {
         Color {
             v: self.v.multiply_by(x),
         }
     }
-    pub fn write_color(&self, v: &mut Vec<u8>, samlpes_per_pixel: u32) {
+    pub fn write_color(&self, v: &mut Vec<u8>, samples_per_pixel: u32) {
         let mut r = self.r();
         let mut g = self.g();
         let mut b = self.b();
 
         //divide the color by the number of samples
-        let scale = 1.0 / samlpes_per_pixel as f64;
+        let scale = 1.0 / samples_per_pixel as f64;
         r = (r * scale).sqrt();
         g = (g * scale).sqrt();
         b = (b * scale).sqrt();

@@ -1,4 +1,9 @@
 use rand::*;
+use std::rc::Rc;
+use material::*;
+use color::*;
+use vec3::*;
+use hittable::*;
 // mod foo;
 mod image;
 mod vec3;
@@ -7,19 +12,26 @@ mod ray;
 mod hittable;
 mod utils;
 mod camera;
+mod material;
 
 fn main() {
     //image
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const WIDTH: u32 = 192;
+    const WIDTH: u32 = 100;
     const HEIGHT: u32 = (WIDTH as f64 / ASPECT_RATIO) as u32;
-    const SAMPLES_PER_PIXEL: u32 = 100;
+    const SAMPLES_PER_PIXEL: u32 = 50;
     const MAX_DEPTH: u32 = 50;
 
     //world
     let mut world = hittable::HittableList::new();
-    world.add(hittable::Sphere::new(vec3::Vec3::new(0.0, 0.0, -1.0), 0.5));
-    world.add(hittable::Sphere::new(vec3::Vec3::new(0.0, -100.5, -1.0), 100.0));
+    // world.add(hittable::Sphere::new(vec3::Vec3::new(0.0, 0.0, -1.0), 0.5, Rc::new(material::Lambertian::new()))); //center sphere
+    // world.add(hittable::Sphere::new(vec3::Vec3::new(0.0, -100.5, -1.0), 100.0, Rc::new(material::Lambertian::new()))); //ground
+    // world.add(hittable::Sphere::new(vec3::Vec3::new(1.0, 0.2, -1.0), 0.3));
+    // world.add(hittable::Sphere::new(vec3::Vec3::new(-3.0, -0.5, -3.0), 1.0));
+    // world.add(hittable::Sphere::new(vec3::Vec3::new(-2.5, 1.5, -3.0), 0.4));
+    // world.add(hittable::Sphere::new(vec3::Vec3::new(1.0, -0.2, -0.75), 0.1));
+
+    world.add(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0, Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0))))); //ground
 
     //camera
     let cam = camera::Camera::new();

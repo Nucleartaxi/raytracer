@@ -1,6 +1,7 @@
 use super::vec3;
 use super::color;
 use super::hittable;
+use super::material;
 
 #[derive(Debug)]
 #[derive(PartialEq)]
@@ -60,11 +61,13 @@ impl Ray {
 
         let (was_hit, temp_rec) = world.hit(&self, 0.001, f64::INFINITY, &hittable::HitRecord::new_empty());
         if was_hit {
-            // return color::Color::new(1.0, 0.0, 0.0); //show red where the rays hit the sphere
-            let target = temp_rec.p.add(&temp_rec.normal).add(&vec3::Vec3::random_unit_vector());
-            return Ray::new(temp_rec.p, target.subtract(&temp_rec.p)).ray_color(world, depth - 1).multiply_by(0.5);
-            // let v = vec3::Vec3::new(1.0, 1.0, 1.0).add(&temp_rec.normal).multiply_by(0.5);
-            // return color::Color::new(v.x(), v.y(), v.z())
+            let (scattered, attenuation, scattered_ray) = temp_rec.mat.scatter(&self, &temp_rec);
+            if scattered {
+                return attenuation.multiply(scattered_ray.ray_color(world, depth - 1));
+            }
+            return color::Color::new_empty();
+            // let target = temp_rec.p.add(&temp_rec.normal).add(&vec3::Vec3::random_unit_vector());
+            // return Ray::new(temp_rec.p, target.subtract(&temp_rec.p)).ray_color(world, depth - 1).multiply_by(0.5);
         }
 
         // sky/background

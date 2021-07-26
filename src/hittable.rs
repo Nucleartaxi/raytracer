@@ -1,11 +1,15 @@
 use super::vec3;
 use super::ray;
+use super::material::*;
+use super::color;
+use std::rc::Rc;
 
 // #[derive(Copy)]
 #[derive(Debug)]
 pub struct HitRecord {
-	pub p: vec3::Vec3,
+    pub p: vec3::Vec3,
     pub normal: vec3::Vec3,
+    pub mat: Rc<dyn Material>,
     pub t: f64,
     pub front_face: bool,
 }
@@ -24,6 +28,7 @@ impl HitRecord {
             normal: vec3::Vec3::new_empty(),
             t: 0.0,
             front_face: true,
+            mat: Rc::new(Lambertian::new(color::Color::new(0.5, 0.5, 0.5))), //Lambertian by default
         }
     }
 }
@@ -35,12 +40,14 @@ pub trait Hittable {
 pub struct Sphere {
     pub center: vec3::Vec3,
     pub radius: f64,
+    pub mat: Rc<dyn Material>,
 }
 impl Sphere {
-    pub fn new(center: vec3::Vec3, radius: f64) -> Sphere {
+    pub fn new(center: vec3::Vec3, radius: f64, mat: Rc<dyn Material>) -> Sphere {
         Sphere {
             center,
             radius,
+            mat,
         }
     }
 }
@@ -53,7 +60,7 @@ impl Hittable for Sphere {
 
         let discriminant = (half_b * half_b) - (a * c);
         if discriminant < 0.0 {
-            return (false, HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face})
+            return (false, HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face, mat: Rc::clone(&rec.mat)})
         }
         let sqrtd = discriminant.sqrt();
 
@@ -62,7 +69,7 @@ impl Hittable for Sphere {
         if root < t_min || t_max < root {
             root = (-half_b + sqrtd) / a;
             if root < t_min || t_max < root {
-                return (false, HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face})
+                return (false, HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face, mat: Rc::clone(&rec.mat)})
             }
         }
         
@@ -71,6 +78,7 @@ impl Hittable for Sphere {
             normal: rec.normal,
             t: root,
             front_face: rec.front_face,
+            mat: Rc::clone(&rec.mat),
         };
         let outward_normal = (temp_rec.p.subtract(&self.center)).divide_by(self.radius);
         temp_rec.set_face_normal(r, outward_normal); //sets front_face to true or false and sets the normal
@@ -98,7 +106,7 @@ impl Hittable for HittableList {
     fn hit(&self, r: &ray::Ray, t_min: f64, t_max: f64, rec: &HitRecord) -> (bool, HitRecord) {
         let mut hit_anything = false;
         let mut closest_so_far = t_max;
-        let mut return_rec = HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face};
+        let mut return_rec = HitRecord {p: rec.p, normal: rec.normal, t: rec.t, front_face: rec.front_face, mat: Rc::clone(&rec.mat)};
         
         for s in &self.vec {
             let (was_hit, temp_rec) = s.hit(r, t_min, closest_so_far, &rec);
