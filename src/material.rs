@@ -63,14 +63,14 @@ impl Dielectric {
 }
 impl Material for Dielectric {
     fn scatter(&self, r_in: &Ray, rec: &HitRecord) -> (bool, Color, Ray) {
-        let attenuation = Color::new(1.0, 1.0, 1.0);
-        let refraction_ratio = if rec.front_face {
-            1.0 / self.ir
-        } else {
-            self.ir
-        };
+        let mut refraction_ratio = self.ir;
+        if rec.front_face {
+            refraction_ratio = 1.0 / self.ir;
+        } 
+        
+
         let unit_direction = r_in.direction().unit_vector();
         let refracted = vec3::Vec3::refract(&unit_direction, &rec.normal, refraction_ratio);
-        (true, attenuation, Ray::new(rec.p, refracted))
+        (true, Color::new(1.0, 1.0, 1.0), Ray::new(rec.p, refracted))
     }
 }

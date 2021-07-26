@@ -17,7 +17,7 @@ mod material;
 fn main() {
     //image
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const WIDTH: u32 = 400;
+    const WIDTH: u32 = 200;
     const HEIGHT: u32 = (WIDTH as f64 / ASPECT_RATIO) as u32;
     const SAMPLES_PER_PIXEL: u32 = 50;
     const MAX_DEPTH: u32 = 50;
