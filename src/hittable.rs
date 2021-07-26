@@ -78,7 +78,7 @@ impl Hittable for Sphere {
             normal: rec.normal,
             t: root,
             front_face: rec.front_face,
-            mat: Rc::clone(&rec.mat),
+            mat: Rc::clone(&self.mat),
         };
         let outward_normal = (temp_rec.p.subtract(&self.center)).divide_by(self.radius);
         temp_rec.set_face_normal(r, outward_normal); //sets front_face to true or false and sets the normal

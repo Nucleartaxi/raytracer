@@ -17,7 +17,7 @@ mod material;
 fn main() {
     //image
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const WIDTH: u32 = 100;
+    const WIDTH: u32 = 400;
     const HEIGHT: u32 = (WIDTH as f64 / ASPECT_RATIO) as u32;
     const SAMPLES_PER_PIXEL: u32 = 50;
     const MAX_DEPTH: u32 = 50;
@@ -32,7 +32,9 @@ fn main() {
     // world.add(hittable::Sphere::new(vec3::Vec3::new(1.0, -0.2, -0.75), 0.1));
 
     world.add(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0, Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0))))); //ground
-
+    world.add(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.3))))); //center
+    world.add(Sphere::new(Vec3::new(-1.0, 0.0, -1.0), 0.5, Rc::new(Metal::new(Color::new(0.8, 0.8, 0.8), 0.3))));
+    world.add(Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.5, Rc::new(Metal::new(Color::new(0.8, 0.6, 0.2), 1.0))));
     //camera
     let cam = camera::Camera::new();
 
