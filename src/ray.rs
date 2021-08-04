@@ -71,6 +71,9 @@ impl Ray {
         }
 
         // sky/background
+        self.sky()
+    }
+    fn sky(&self) -> color::Color { //generates sky background
         let unit_direction = self.direction.unit_vector();
         let t = 0.5 * (unit_direction.y() + 1.0);
 
