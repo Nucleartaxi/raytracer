@@ -71,7 +71,7 @@ impl Ray {
         }
 
         // sky/background
-        self.quadrant()
+        self.sky()
     }
     fn quadrant(&self) -> color::Color { //generates quadrant background based on sign of ray direction
         let x = self.direction().x();

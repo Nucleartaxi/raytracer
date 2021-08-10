@@ -104,12 +104,9 @@ impl Vec3 {
         v.subtract(&n.multiply_by(v.dot(&n)).multiply_by(2.0))
     }
     pub fn refract(uv: &Vec3, n: &Vec3, etai_over_etat: f64) -> Vec3 {
-        let ndot: f64 = n.dot(&uv.multiply_by(-1.0));
-        let mut cos_theta = 1.0;
-        if ndot < 1.0 { //in this case ndot is the minimum of ndot and 1.0
-            cos_theta = ndot;
-        }
-        let r_out_perp = uv.add(&n.multiply_by(cos_theta)).multiply_by(etai_over_etat);
+        let cos_theta = uv.multiply_by(-1.0).dot(n).min(1.0);
+        let r_out_perp = n.multiply_by(cos_theta).add(uv).multiply_by(etai_over_etat);
+        // let r_out_perp = uv.add(&n.multiply_by(cos_theta)).multiply_by(etai_over_etat);
         let r_out_parallel = n.multiply_by(-1.0 * f64::sqrt(f64::abs(1.0 - r_out_perp.length_squared())));
         r_out_perp.add(&r_out_parallel)
     }
