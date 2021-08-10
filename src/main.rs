@@ -22,9 +22,9 @@ fn main() {
 
     //image
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const WIDTH: u32 = 200;
+    const WIDTH: u32 = 400;
     const HEIGHT: u32 = (WIDTH as f64 / ASPECT_RATIO) as u32;
-    const SAMPLES_PER_PIXEL: u32 = 50;
+    const SAMPLES_PER_PIXEL: u32 = 10;
     const MAX_DEPTH: u32 = 50;
 
     //world
@@ -33,14 +33,14 @@ fn main() {
     // world.add(hittable::Sphere::new(vec3::Vec3::new(0.0, -100.5, -1.0), 100.0, Rc::new(material::Lambertian::new()))); //ground
     // world.add(hittable::Sphere::new(vec3::Vec3::new(1.0, -0.2, -0.75), 0.1, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)))));
 
-    // world.add(hittable::Sphere::new(vec3::Vec3::new(1.0, 0.2, -1.0), 0.3, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)))));
-    // world.add(hittable::Sphere::new(vec3::Vec3::new(-3.0, -0.5, -3.0), 1.0, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)))));
-    // world.add(hittable::Sphere::new(vec3::Vec3::new(-2.5, 1.5, -3.0), 0.4, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)))));
+    // world.add(hittable::Sphere::new(vec3::Vec3::new(1.0, 0.2, -1.0), 0.3, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7))))); //purple right
+    world.add(hittable::Sphere::new(vec3::Vec3::new(-3.0, 0.0, -3.0), 1.0, Rc::new(Metal::new(Color::new(0.7, 0.3, 0.7), 0.1)))); //big left
+    world.add(hittable::Sphere::new(vec3::Vec3::new(-2.0, 1.5, -3.0), 0.4, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7))))); //small floating left
 
     world.add(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0, Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0))))); //ground
-    world.add(Sphere::new(Vec3::new(0.5, 0.0, -1.25), 0.6, Rc::new(Metal::new(Color::new(0.5, 0.5, 0.8), 0.0)))); //center
+    world.add(Sphere::new(Vec3::new(0.5, 0.1, -1.25), 0.6, Rc::new(Metal::new(Color::new(0.5, 0.5, 0.8), 0.0)))); //center
     // world.add(Sphere::new(Vec3::new(1.0, -0.1, -1.0), 0.5, Rc::new(Lambertian::new(Color::new(0.5, 0.5, 0.8))))); //right
-    world.add(Sphere::new(Vec3::new(-0.6, 0.0, -1.75), 0.6, Rc::new(Lambertian::new(Color::new(0.5, 0.5, 0.8))))); //left
+    // world.add(Sphere::new(Vec3::new(-0.6, 0.1, -1.75), 0.6, Rc::new(Lambertian::new(Color::new(0.5, 0.5, 0.8))))); //left
 
 
     // world.add(Sphere::new(Vec3::new(-1.0, 0.0, -1.0), 0.5, Rc::new(Metal::new(Color::new(1.0, 1.0, 1.0), 0.1))));
@@ -48,13 +48,13 @@ fn main() {
 
     let mut rng = rand::thread_rng();
     for i in -4..5 {
-        for j in -4..1 {
+        for j in -4..4 {
             let temp_mat: Rc<dyn Material> = if rng.gen_range(0.0..1.0) > 0.5 {
                 Rc::new(Lambertian::new(Color::random_color()))
             } else {
                 Rc::new(Metal::new(Color::random_color(), rng.gen_range(0.0..1.0)))
             };
-            world.add(Sphere::new(Vec3::new(i as f64 + 0.5 * rng.gen::<f64>(), -0.3, j as f64 + 0.5 * rng.gen::<f64>()), 0.2, temp_mat));
+            world.add(Sphere::new(Vec3::new(i as f64 + 0.2 * rng.gen::<f64>(), -0.3, j as f64 + 0.2 * rng.gen::<f64>()), 0.2, temp_mat));
         }
     }
 
