@@ -22,9 +22,9 @@ fn main() {
 
     //image
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const WIDTH: u32 = 400;
+    const WIDTH: u32 = 1920;
     const HEIGHT: u32 = (WIDTH as f64 / ASPECT_RATIO) as u32;
-    const SAMPLES_PER_PIXEL: u32 = 10;
+    const SAMPLES_PER_PIXEL: u32 = 100;
     const MAX_DEPTH: u32 = 50;
 
     //world
@@ -54,7 +54,7 @@ fn main() {
             } else {
                 Rc::new(Metal::new(Color::random_color(), rng.gen_range(0.0..1.0)))
             };
-            world.add(Sphere::new(Vec3::new(i as f64 + 0.2 * rng.gen::<f64>(), -0.3, j as f64 + 0.2 * rng.gen::<f64>()), 0.2, temp_mat));
+            world.add(Sphere::new(Vec3::new(i as f64 + 0.3 * rng.gen::<f64>(), -0.3, j as f64 + 0.3 * rng.gen::<f64>()), 0.2, temp_mat));
         }
     }
 
