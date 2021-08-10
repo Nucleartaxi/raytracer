@@ -31,24 +31,31 @@ fn main() {
     let mut world = hittable::HittableList::new();
     // world.add(hittable::Sphere::new(vec3::Vec3::new(0.0, 0.0, -1.0), 0.5, Rc::new(material::Lambertian::new()))); //center sphere
     // world.add(hittable::Sphere::new(vec3::Vec3::new(0.0, -100.5, -1.0), 100.0, Rc::new(material::Lambertian::new()))); //ground
-    world.add(hittable::Sphere::new(vec3::Vec3::new(1.0, 0.2, -1.0), 0.3, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)))));
-    world.add(hittable::Sphere::new(vec3::Vec3::new(-3.0, -0.5, -3.0), 1.0, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)))));
-    world.add(hittable::Sphere::new(vec3::Vec3::new(-2.5, 1.5, -3.0), 0.4, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)))));
-    world.add(hittable::Sphere::new(vec3::Vec3::new(1.0, -0.2, -0.75), 0.1, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)))));
+    // world.add(hittable::Sphere::new(vec3::Vec3::new(1.0, -0.2, -0.75), 0.1, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)))));
+
+    // world.add(hittable::Sphere::new(vec3::Vec3::new(1.0, 0.2, -1.0), 0.3, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)))));
+    // world.add(hittable::Sphere::new(vec3::Vec3::new(-3.0, -0.5, -3.0), 1.0, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)))));
+    // world.add(hittable::Sphere::new(vec3::Vec3::new(-2.5, 1.5, -3.0), 0.4, Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.7)))));
 
     world.add(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0, Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0))))); //ground
-    world.add(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.3, Rc::new(Lambertian::new(Color::new(0.5, 0.5, 0.8))))); //center
+    world.add(Sphere::new(Vec3::new(0.5, 0.0, -1.25), 0.6, Rc::new(Metal::new(Color::new(0.5, 0.5, 0.8), 0.0)))); //center
+    // world.add(Sphere::new(Vec3::new(1.0, -0.1, -1.0), 0.5, Rc::new(Lambertian::new(Color::new(0.5, 0.5, 0.8))))); //right
+    world.add(Sphere::new(Vec3::new(-0.6, 0.0, -1.75), 0.6, Rc::new(Lambertian::new(Color::new(0.5, 0.5, 0.8))))); //left
+
+
     // world.add(Sphere::new(Vec3::new(-1.0, 0.0, -1.0), 0.5, Rc::new(Metal::new(Color::new(1.0, 1.0, 1.0), 0.1))));
     // world.add(Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.5, Rc::new(Metal::new(Color::new(0.8, 0.6, 0.2), 0.0))));
 
     let mut rng = rand::thread_rng();
-    for i in 0..75 {
-        let temp_mat: Rc<dyn Material> = if rng.gen_range(0.0..1.0) > 0.5 {
-            Rc::new(Lambertian::new(Color::random_color()))
-        } else {
-            Rc::new(Metal::new(Color::random_color(), rng.gen_range(0.0..1.0)))
-        };
-        world.add(Sphere::new(Vec3::new(rng.gen_range(-5.0..5.0), -0.25, rng.gen_range(-5.0..-0.80)), 0.2, temp_mat));
+    for i in -4..5 {
+        for j in -4..1 {
+            let temp_mat: Rc<dyn Material> = if rng.gen_range(0.0..1.0) > 0.5 {
+                Rc::new(Lambertian::new(Color::random_color()))
+            } else {
+                Rc::new(Metal::new(Color::random_color(), rng.gen_range(0.0..1.0)))
+            };
+            world.add(Sphere::new(Vec3::new(i as f64 + 0.5 * rng.gen::<f64>(), -0.3, j as f64 + 0.5 * rng.gen::<f64>()), 0.2, temp_mat));
+        }
     }
 
     // world.add(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5, Rc::new(Dielectric::new(1.5))));
@@ -59,7 +66,7 @@ fn main() {
     let mut image_data: Vec<u8> = Vec::new();
     // image::create_test_image(&mut image_data, WIDTH, HEIGHT);
     for i in (0..(HEIGHT)).rev() {
-        // println!("Lines remaining: {}", i + 1); //progress indicator in case of long renders
+        println!("Lines remaining: {}", i + 1); //progress indicator in case of long renders
         for j in 0..WIDTH {
             let mut pixel_color = color::Color::new_empty();
             // println!("x: {} y: {}", i, j);
